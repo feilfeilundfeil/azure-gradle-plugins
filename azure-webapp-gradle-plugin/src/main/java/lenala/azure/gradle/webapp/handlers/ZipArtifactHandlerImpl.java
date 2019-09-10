@@ -21,7 +21,8 @@ public class ZipArtifactHandlerImpl extends ArtifactHandlerBase {
         assureStagingDirectoryNotEmpty();
 
         File zipFile = getZipFile();
-        task.getLogger().info(String.format(DEPLOY_START, target.getName()));
+        if (target.getApp() != null)
+            task.getLogger().info(String.format(DEPLOY_START, target.getName()));
 
         // Add retry logic here to avoid Kudu's socket timeout issue.
         int retryCount = 0;
@@ -29,7 +30,9 @@ public class ZipArtifactHandlerImpl extends ArtifactHandlerBase {
             retryCount += 1;
             try {
                 target.zipDeploy(zipFile);
-                task.getLogger().quiet(String.format(DEPLOY_FINISH, target.getDefaultHostName()));
+
+                if (target.getApp() != null)
+                    task.getLogger().quiet(String.format(DEPLOY_FINISH, target.getDefaultHostName()));
                 return;
             } catch (Exception e) {
                 task.getLogger().quiet(
@@ -38,6 +41,8 @@ public class ZipArtifactHandlerImpl extends ArtifactHandlerBase {
             }
         }
         target.zipDeploy(getZipFile());
+        task.getLogger().quiet(
+                String.format("Zip file created: %s", getZipFile().getPath()));
     }
 
     protected File getZipFile() {

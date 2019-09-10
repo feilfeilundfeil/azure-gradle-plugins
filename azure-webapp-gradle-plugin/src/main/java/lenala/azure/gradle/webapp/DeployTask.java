@@ -1,5 +1,8 @@
 package lenala.azure.gradle.webapp;
 
+import com.microsoft.azure.management.Azure;
+import com.microsoft.azure.management.appservice.DeploymentSlot;
+import com.microsoft.azure.management.appservice.WebApp;
 import lenala.azure.gradle.webapp.auth.AuthConfiguration;
 import lenala.azure.gradle.webapp.auth.AzureAuthFailureException;
 import lenala.azure.gradle.webapp.auth.AzureAuthHelper;
@@ -9,9 +12,6 @@ import lenala.azure.gradle.webapp.configuration.DeploymentSlotDeployTarget;
 import lenala.azure.gradle.webapp.configuration.WebAppDeployTarget;
 import lenala.azure.gradle.webapp.handlers.HandlerFactory;
 import lenala.azure.gradle.webapp.handlers.RuntimeHandler;
-import com.microsoft.azure.management.Azure;
-import com.microsoft.azure.management.appservice.DeploymentSlot;
-import com.microsoft.azure.management.appservice.WebApp;
 import org.apache.commons.lang3.StringUtils;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.GradleException;
@@ -19,7 +19,6 @@ import org.gradle.api.tasks.TaskAction;
 import org.gradle.api.tasks.TaskExecutionException;
 
 import java.lang.reflect.Field;
-import java.util.Collections;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
@@ -49,7 +48,7 @@ public class DeployTask extends DefaultTask implements AuthConfiguration {
     private AzureWebAppExtension azureWebAppExtension;
     private WebApp app;
     private AzureAuthHelper azureAuthHelper;
-    private DeploymentUtil util = new DeploymentUtil();
+    DeploymentUtil util = new DeploymentUtil();
 
     public void setAzureWebAppExtension(AzureWebAppExtension azureWebAppExtension) {
         this.azureWebAppExtension = azureWebAppExtension;

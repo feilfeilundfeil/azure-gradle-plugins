@@ -24,7 +24,6 @@
 
 plugins {
     id 'com.gradle.build-scan'     version '2.1'
-    id 'com.gradle.plugin-publish' version '0.10.0' apply false
 }
 
 buildScan {
@@ -35,7 +34,6 @@ buildScan {
 subprojects {
     apply plugin: 'groovy'
     apply plugin: 'java-gradle-plugin'
-    apply plugin: 'com.gradle.plugin-publish'
     apply plugin: 'maven-publish'
 
     repositories {
@@ -68,23 +66,15 @@ subprojects {
         }
     }
 
-    pluginBundle {
-        website     = 'https://github.com/lenala/azure-gradle-plugins'
-        vcsUrl      = 'https://github.com/lenala/azure-gradle-plugins.git'
-        description = project.projectDescription
-        tags        = ['azure']
-
-        plugins {
-            "${project.pluginShortName}Plugin" {
-                id          = project.pluginId
-                displayName = project.displayName
+    publishing {
+        repositories {
+            maven {
+                url 'https://pkgs.dev.azure.com/ffuf/_packaging/Pass/maven/v1'
+                credentials {
+                    username "AZURE_ARTIFACTS"
+                    password System.getenv("AZURE_ARTIFACTS_ENV_ACCESS_TOKEN_2") ?: "${azureArtifactsGradleAccessToken}"
+                }
             }
-        }
-
-        mavenCoordinates {
-            groupId    = project.group
-            artifactId = project.name
-            version    = project.version
         }
     }
 }
