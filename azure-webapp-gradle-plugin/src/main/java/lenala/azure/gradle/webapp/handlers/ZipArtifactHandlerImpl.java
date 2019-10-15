@@ -2,6 +2,7 @@ package lenala.azure.gradle.webapp.handlers;
 
 import lenala.azure.gradle.webapp.DeployTask;
 import lenala.azure.gradle.webapp.configuration.DeployTarget;
+import org.apache.commons.io.FileUtils;
 import org.gradle.api.GradleException;
 import org.zeroturnaround.zip.ZipUtil;
 
@@ -51,6 +52,14 @@ public class ZipArtifactHandlerImpl extends ArtifactHandlerBase {
         final File stagingDirectory = new File(stagingDirectoryPath);
 
         ZipUtil.pack(stagingDirectory, zipFile);
+
+        //delete zipped files
+        try {
+            FileUtils.deleteDirectory(stagingDirectory);
+        } catch (IOException e) {
+            task.getLogger().quiet(
+                    String.format("Exception occurred when deleting the zipped files: %s", e.getMessage()));
+        }
         return zipFile;
     }
 }
